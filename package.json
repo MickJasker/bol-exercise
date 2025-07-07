@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
-    "dev": "react-router dev",
+    "dev": "npx concurrently --kill-others --names 'client,server' 'react-router dev' 'pnpm dev:server'",
     "dev:server": "tsx ./server/src/index.ts --watch",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
@@ -20,17 +20,19 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
+    "@tanstack/react-query": "^5.81.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "fuse.js": "^7.1.0",
+    "graphql": "^16.11.0",
+    "graphql-request": "^7.2.0",
+    "graphql-yoga": "^5.14.0",
     "isbot": "^5.1.27",
     "lucide-react": "^0.525.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router": "^7.5.3",
-    "tailwind-merge": "^3.3.1",
-    "graphql": "^16.11.0",
-    "graphql-yoga": "^5.14.0"
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.0.1",

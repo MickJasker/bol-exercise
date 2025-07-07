@@ -1,10 +1,11 @@
-import { useId, useMemo, useState, type HTMLAttributes } from 'react';
+import { useCallback, useMemo, useState, type HTMLAttributes } from 'react';
 import { cn } from '~/lib/utils';
 import { Checkbox } from '../checkbox/checkbox';
 import { Button } from '../button/button';
 import { Input } from '../input/input';
 import { SearchIcon } from '~/components/icons/search';
 import Fuse from 'fuse.js';
+import { useSearchParams } from 'react-router';
 
 /**
  * MultiSelectFilter component that allows users to select multiple options from a list.
@@ -16,6 +17,7 @@ export function MultiSelectFilter({
   applyButtonLabel = 'Apply',
   className,
   onSubmit,
+  id,
   ...props
 }: {
   /**
@@ -25,35 +27,73 @@ export function MultiSelectFilter({
   /**
    * Options for the multi-select filter, each option is a tuple of [value, label]
    */
-  options: readonly [string, string][];
+  options: readonly {
+    value: string;
+    label: string;
+  }[];
   /**
    * Label for the apply button after selecting options
    */
   applyButtonLabel?: string;
+  /**
+   * Unique id for the multi-select filter, used for storing selected options in the URL search params
+   */
+  id: string;
 } & HTMLAttributes<HTMLFormElement>) {
   const [searchValue, setSearchValue] = useState('');
-  const [selectedOptions, setSelectedOptions] = useState<readonly string[]>([]);
-  const [checkedOptions, setCheckedOptions] = useState<readonly string[]>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const fuse = useMemo(
-    () =>
-      new Fuse(options, {
-        keys: ['1'], // Search by the label (second element of the tuple)
-      }),
-    [options]
+  const selectedOptions = useMemo(() => {
+    try {
+      const optionsString = searchParams.get(`${id}.options`);
+      if (optionsString) {
+        const optionsArray = JSON.parse(atob(optionsString)) as string[];
+        return optionsArray;
+      } else {
+        return [];
+      }
+    } catch {
+      return [];
+    }
+  }, [searchParams, id]);
+
+  const [checkedOptions, setCheckedOptions] =
+    useState<readonly string[]>(selectedOptions);
+
+  const setSelectedOptions = useCallback(
+    (selected: readonly string[]) => {
+      const newSearchParams = new URLSearchParams(searchParams);
+
+      if (selected.length === 0) {
+        newSearchParams.delete(`${id}.options`);
+      } else {
+        newSearchParams.set(`${id}.options`, btoa(JSON.stringify(selected)));
+      }
+
+      setSearchParams(newSearchParams);
+    },
+    [searchParams, setSearchParams, id]
   );
+
+  const fuse = useMemo(() => {
+    return new Fuse(options, {
+      keys: ['label'],
+    });
+  }, [options]);
 
   const filteredOptions = useMemo(() => {
     if (!searchValue)
       return [
-        ...options.filter(([value]) => selectedOptions.includes(value)),
-        ...options.filter(([value]) => !selectedOptions.includes(value)),
+        ...options
+          .toSorted((a, b) => a.label.localeCompare(b.label))
+          .filter(({ value }) => selectedOptions.includes(value)),
+        ...options
+          .toSorted((a, b) => a.label.localeCompare(b.label))
+          .filter(({ value }) => !selectedOptions.includes(value)),
       ];
 
     return fuse.search(searchValue).map((result) => result.item);
-  }, [searchValue, fuse, options, selectedOptions]);
-
-  const id = useId();
+  }, [searchValue, fuse, options, selectedOptions, setSelectedOptions]);
 
   return (
     <form
@@ -62,12 +102,10 @@ export function MultiSelectFilter({
         'bg-foreground/2 border border-input rounded-sm p-5 flex flex-col gap-5',
         className
       )}
+      id={id}
       onSubmit={(e) => {
         e.preventDefault();
-
-        const formData = new FormData(e.currentTarget);
-        const selected = formData.getAll('options') as string[];
-        setSelectedOptions(selected);
+        setSelectedOptions(checkedOptions);
 
         onSubmit?.(e);
       }}
@@ -83,9 +121,9 @@ export function MultiSelectFilter({
         onChange={(e) => setSearchValue(e.target.value)}
       />
 
-      <div className="flex flex-col gap-4 h-[200px] overflow-y-auto">
+      <div className="flex flex-col gap-4 h-[200px] relative overflow-y-auto">
         {filteredOptions.length > 0 ? (
-          filteredOptions.map(([value, label]) => (
+          filteredOptions.map(({ value, label }) => (
             <Checkbox
               key={value}
               value={value}

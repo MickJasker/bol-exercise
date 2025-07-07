@@ -1,16 +1,26 @@
 import { createServer } from 'node:http';
 import { createSchema, createYoga } from 'graphql-yoga';
+import items from './items.json';
 
 const yoga = createYoga({
   schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
-        hello: String!
+        categories: [Category!]!
+      }
+
+      type Category {
+        label: String!
+        value: ID!
       }
     `,
     resolvers: {
       Query: {
-        hello: () => 'Hello, world!',
+        categories: () =>
+          items.data.map((item, index) => ({
+            label: item,
+            value: index.toString(),
+          })),
       },
     },
   }),

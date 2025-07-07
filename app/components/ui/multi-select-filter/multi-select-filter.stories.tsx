@@ -10,36 +10,14 @@ const meta: Meta<typeof MultiSelectFilter> = {
 
 export default meta;
 
-const sampleOptions: [string, string][] = [
-  ["apple", "Apple"],
-  ["banana", "Banana"],
-  ["cherry", "Cherry"],
-  ["date", "Date"],
-  ["elderberry", "Elderberry"],
-  ["fig", "Fig"],
-  ["grape", "Grape"],
-  ["honeydew", "Honeydew"],
-  ["kiwi", "Kiwi"],
-  ["lemon", "Lemon"],
-  ["mango", "Mango"],
-  ["nectarine", "Nectarine"],
-  ["orange", "Orange"],
-  ["papaya", "Papaya"],
-  ["quince", "Quince"],
-  ["raspberry", "Raspberry"],
-  ["strawberry", "Strawberry"],
-  ["tangerine", "Tangerine"],
-  ["ugli fruit", "Ugli Fruit"],
-  ["watermelon", "Watermelon"],
-  ["zucchini", "Zucchini"],
-  ["blueberry", "Blueberry"],
-  ["blackberry", "Blackberry"],
-  ["cantaloupe", "Cantaloupe"],
-  ["dragonfruit", "Dragonfruit"],
-  ["grapefruit", "Grapefruit"],
-  ["jackfruit", "Jackfruit"],
-  ["lychee", "Lychee"],
-  ["passionfruit", "Passionfruit"],
+const sampleOptions: {
+  value: string;
+  label: string;
+}[] = [
+  { value: "apple", label: "Apple" },
+  { value: "banana", label: "Banana" },
+  { value: "cherry", label: "Cherry" },
+  
 ];
 
 export const Default: StoryObj<typeof MultiSelectFilter> = {
