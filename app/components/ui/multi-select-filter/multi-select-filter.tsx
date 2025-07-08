@@ -98,7 +98,7 @@ export function MultiSelectFilter({
       <Input
         icon={<SearchIcon />}
         name="search"
-        placeholder="Search..."
+        placeholder="Zoek op..."
         onChange={(e) => startTransition(() => setSearchValue(e.target.value))}
       />
 
