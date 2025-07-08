@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useId, useMemo, useState, type HTMLAttributes } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+  type HTMLAttributes,
+} from 'react';
 import { cn } from '~/lib/utils';
 import { Checkbox } from '../checkbox/checkbox';
 import { Button } from '../button/button';
@@ -9,7 +16,6 @@ import { useSearchParams } from 'react-router';
 
 /**
  * MultiSelectFilter component that allows users to select multiple options from a list.
- * It includes a label, options, an apply button, and a search functionality.
  */
 export function MultiSelectFilter({
   label,
@@ -27,10 +33,7 @@ export function MultiSelectFilter({
   /**
    * Options for the multi-select filter, each option is a tuple of [value, label]
    */
-  options: readonly {
-    value: string;
-    label: string;
-  }[];
+  options: readonly { value: string; label: string }[];
   /**
    * Label for the apply button after selecting options
    */
@@ -47,12 +50,7 @@ export function MultiSelectFilter({
   const selectedOptions = useMemo(() => {
     try {
       const optionsString = searchParams.get(`${storeId}.options`);
-      if (optionsString) {
-        const optionsArray = JSON.parse(atob(optionsString)) as string[];
-        return optionsArray;
-      } else {
-        return [];
-      }
+      return optionsString ? (JSON.parse(atob(optionsString)) as string[]) : [];
     } catch {
       return [];
     }
@@ -68,9 +66,11 @@ export function MultiSelectFilter({
       if (selected.length === 0) {
         newSearchParams.delete(`${storeId}.options`);
       } else {
-        newSearchParams.set(`${storeId}.options`, btoa(JSON.stringify(selected)));
+        newSearchParams.set(
+          `${storeId}.options`,
+          btoa(JSON.stringify(selected))
+        );
       }
-
       setSearchParams(newSearchParams, {
         preventScrollReset: true,
         replace: true,
@@ -80,36 +80,38 @@ export function MultiSelectFilter({
   );
 
   useEffect(() => {
-    // Initialize checked options based on the selected options from search params
     setCheckedOptions(selectedOptions);
   }, [searchParams]);
 
   const id = useId();
 
-  const fuse = useMemo(() => {
-    return new Fuse(options, {
-      keys: ['label'],
-      threshold: 0.2,
-      includeScore: true,
-      ignoreLocation: true,
-      useExtendedSearch: true,
-      minMatchCharLength: 2,
-    });
-  }, [options]);
+  const fuse = useMemo(
+    () =>
+      new Fuse(options, {
+        keys: ['label'],
+        threshold: 0.2,
+        includeScore: true,
+        ignoreLocation: true,
+        useExtendedSearch: true,
+        minMatchCharLength: 2,
+      }),
+    [options]
+  );
 
   const filteredOptions = useMemo(() => {
-    if (!searchValue)
+    if (!searchValue) {
+      const sorted = options.toSorted((a, b) =>
+        a.label.localeCompare(b.label, 'nl-NL')
+      );
+
       return [
-        ...options
-          .toSorted((a, b) => a.label.localeCompare(b.label, 'nl-NL'))
-          .filter(({ value }) => selectedOptions.includes(value)),
-        ...options
-          .toSorted((a, b) => a.label.localeCompare(b.label, 'nl-NL'))
-          .filter(({ value }) => !selectedOptions.includes(value)),
+        ...sorted.filter(({ value }) => selectedOptions.includes(value)),
+        ...sorted.filter(({ value }) => !selectedOptions.includes(value)),
       ];
+    }
 
     return fuse.search(searchValue).map((result) => result.item);
-  }, [searchValue, fuse, options, selectedOptions, setSelectedOptions]);
+  }, [searchValue, fuse, options, selectedOptions]);
 
   return (
     <form
@@ -151,9 +153,7 @@ export function MultiSelectFilter({
                   checked ? [...prev, value] : prev.filter((v) => v !== value)
                 );
               }}
-              label={{
-                children: label,
-              }}
+              label={{ children: label }}
             />
           ))
         ) : (
