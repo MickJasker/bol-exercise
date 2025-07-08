@@ -32,7 +32,7 @@ function Button({
 }: ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
     /**
-     * If true, the button will render as a Radix Slot component instead of a button. 
+     * If true, the button will render as a Radix Slot component instead of a button.
      * Useful for integrating with other components that require a specific element type like links or custom components.
      * */
     asChild?: boolean;

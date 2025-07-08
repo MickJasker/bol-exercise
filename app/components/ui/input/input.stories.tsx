@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Input } from './input';
 import { SearchIcon } from '~/components/icons/search';
+import { expect } from 'storybook/test';
 
 const meta: Meta<typeof Input> = {
   title: 'UI/Input',
@@ -15,20 +16,28 @@ export default meta;
 
 type Story = StoryObj<typeof Input>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  play: async ({ canvas, userEvent }) => {
+    const input = canvas.getByRole('textbox');
+    expect(input).toHaveValue('');
+    expect(input).toHaveAttribute('placeholder', 'Type something...');
+    await userEvent.type(input, 'Hello world');
+    expect(input).toHaveValue('Hello world');
+  }
+};
 
 export const WithValue: Story = {
   args: {
-    value: 'Hello world',
-    readOnly: true,
+    defaultValue: 'Hello world',
   },
-};
-
-export const Password: Story = {
-  args: {
-    type: 'password',
-    placeholder: 'Enter your password',
-  },
+  play: async ({ canvas, userEvent }) => {
+    const input = canvas.getByRole('textbox');
+    expect(input).toHaveValue('Hello world');
+    await userEvent.clear(input);
+    expect(input).toHaveValue('');
+    await userEvent.type(input, 'Hello world');
+    expect(input).toHaveValue('Hello world');
+  }
 };
 
 export const Disabled: Story = {
@@ -36,6 +45,10 @@ export const Disabled: Story = {
     disabled: true,
     placeholder: 'Disabled input',
   },
+  play: async ({ canvas }) => {
+    const input = canvas.getByRole('textbox');
+    expect(input).toBeDisabled();
+  }
 };
 
 export const Invalid: Story = {
@@ -43,14 +56,22 @@ export const Invalid: Story = {
     'aria-invalid': true,
     placeholder: 'Invalid input',
   },
+  play: async ({ canvas }) => {
+    const input = canvas.getByRole('textbox');
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+  }
 };
 
 export const Search: Story = {
   args: {
-    type: 'search',
     placeholder: 'Search...',
     "aria-label": 'Search',
     name: 'search',
     icon: <SearchIcon />,
   },
+  play: async ({ canvas, userEvent }) => {
+    const input = canvas.getByRole('textbox');
+    await userEvent.type(input, 'Hello world');
+    expect(input).toHaveValue('Hello world');
+  }
 }

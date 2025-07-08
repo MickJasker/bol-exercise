@@ -6,6 +6,7 @@
     "build": "react-router build",
     "dev": "npx concurrently --kill-others --names 'client,server' 'react-router dev' 'pnpm dev:server'",
     "dev:server": "tsx ./server/src/index.ts --watch",
+    "test:ui": "vitest --config ./vite.storybook.config.ts",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
     "storybook": "storybook dev -p 6006",

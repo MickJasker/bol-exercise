@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { Checkbox } from './checkbox';
+import { expect } from 'storybook/test';
 
 const meta: Meta<typeof Checkbox> = {
   title: 'UI/Checkbox',
@@ -35,6 +36,16 @@ export const Default: Story = {
   },
   args: {
     checked: false,
+    name: 'checkbox',
+  },
+  play: async ({ canvas, userEvent }) => {
+    const checkbox = canvas.getByRole('checkbox', { name: 'Checkbox' });
+    
+    expect(checkbox).not.toBeChecked();
+
+    await userEvent.click(checkbox);
+
+    expect(checkbox).toBeChecked();
   },
 };
 
@@ -52,6 +63,10 @@ export const Disabled: Story = {
   args: {
     checked: false,
     disabled: true,
+  },
+  play: async ({ canvas }) => {
+    const checkbox = canvas.getByRole('checkbox', { name: 'Checkbox' });
+    expect(checkbox).toBeDisabled();
   },
 };
 
@@ -73,5 +88,12 @@ export const WithLabel: Story = {
   },
   args: {
     checked: false,
+  },
+  play: async ({ canvas, userEvent }) => {
+    const checkboxLabel = canvas.getByLabelText('Checkbox with Label');
+    
+    expect(checkboxLabel).not.toBeChecked();
+    await userEvent.click(checkboxLabel);
+    expect(checkboxLabel).toBeChecked();
   },
 };

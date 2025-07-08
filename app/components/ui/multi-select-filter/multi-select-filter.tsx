@@ -107,6 +107,8 @@ export function MultiSelectFilter({
         e.preventDefault();
         setSelectedOptions(checkedOptions);
 
+        setSearchValue('');
+
         onSubmit?.(e);
       }}
       {...props}

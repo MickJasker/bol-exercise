@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MultiSelectFilter } from "./multi-select-filter";
+import { expect } from "storybook/test";
 
 const meta: Meta<typeof MultiSelectFilter> = {
   title: "UI/MultiSelectFilter",
@@ -46,6 +47,23 @@ export const Default: StoryObj<typeof MultiSelectFilter> = {
       e.preventDefault();
     }
   },
+  play: async ({ canvas, userEvent }) => {
+    const input = canvas.getByRole("textbox");
+    expect(input).toHaveValue("");
+    expect(input).toHaveAttribute("placeholder", "Search...");
+
+    await userEvent.type(input, "Fig");
+
+    const option = canvas.getByText("Fig");
+    expect(option).toBeInTheDocument();
+
+    await userEvent.click(option);
+
+    const applyButton = canvas.getByRole("button", { name: "Apply" });
+    await userEvent.click(applyButton);
+
+    expect(canvas.getByText("Fig")).toBeInTheDocument();
+  }
 };
 
 export const WithApplyHandler: StoryObj<typeof MultiSelectFilter> = {
