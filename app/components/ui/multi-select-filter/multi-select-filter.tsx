@@ -169,7 +169,7 @@ function FilteredList({
   }, [searchValue, fuse, options, selectedOptions]);
 
   return (
-    <div className="flex flex-col gap-4 h-[200px] relative overflow-y-auto">
+    <fieldset className="flex flex-col gap-4 h-[200px] relative overflow-y-auto">
       {filteredOptions.length > 0 ? (
         filteredOptions.map(({ value, label }) => (
           <Checkbox
@@ -188,6 +188,6 @@ function FilteredList({
       ) : (
         <p className="text-sm">Geen resultaten</p>
       )}
-    </div>
+    </fieldset>
   );
 }
