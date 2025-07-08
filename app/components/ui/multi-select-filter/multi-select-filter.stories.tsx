@@ -42,7 +42,7 @@ export const Default: StoryObj<typeof MultiSelectFilter> = {
     options: sampleOptions,
     applyButtonLabel: "Apply",
     className: "max-w-[300px]",
-    id: "fruits",
+    storeId: "fruits",
     onSubmit: (e) => {
       e.preventDefault();
     }
@@ -91,7 +91,7 @@ export const WithApplyHandler: StoryObj<typeof MultiSelectFilter> = {
     options: sampleOptions,
     applyButtonLabel: "Apply",
     className: "max-w-[300px]",
-    id: "fruits",
+    storeId: "fruits",
     onSubmit: (e) => {
       e.preventDefault();
     }
@@ -105,7 +105,7 @@ export const NoOptions: StoryObj<typeof MultiSelectFilter> = {
     options: [],
     applyButtonLabel: "Apply",
     className: "max-w-[300px]",
-    id: "fruits",
+    storeId: "fruits",
     onSubmit: (e) => {
       e.preventDefault();
     }

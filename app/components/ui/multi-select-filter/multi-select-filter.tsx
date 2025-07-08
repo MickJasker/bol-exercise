@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, type HTMLAttributes } from 'react';
+import { useCallback, useEffect, useId, useMemo, useState, type HTMLAttributes } from 'react';
 import { cn } from '~/lib/utils';
 import { Checkbox } from '../checkbox/checkbox';
 import { Button } from '../button/button';
@@ -17,7 +17,7 @@ export function MultiSelectFilter({
   applyButtonLabel = 'Apply',
   className,
   onSubmit,
-  id,
+  storeId,
   ...props
 }: {
   /**
@@ -36,16 +36,17 @@ export function MultiSelectFilter({
    */
   applyButtonLabel?: string;
   /**
-   * Unique id for the multi-select filter, used for storing selected options in the URL search params
+   * Unique id for the multi-select filter, used for storing selected options in the URL search params.
+   * When the same storeId is used in multiple filters, the selected options will be shared between them.
    */
-  id: string;
+  storeId: string;
 } & HTMLAttributes<HTMLFormElement>) {
   const [searchValue, setSearchValue] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
 
   const selectedOptions = useMemo(() => {
     try {
-      const optionsString = searchParams.get(`${id}.options`);
+      const optionsString = searchParams.get(`${storeId}.options`);
       if (optionsString) {
         const optionsArray = JSON.parse(atob(optionsString)) as string[];
         return optionsArray;
@@ -55,7 +56,7 @@ export function MultiSelectFilter({
     } catch {
       return [];
     }
-  }, [searchParams, id]);
+  }, [searchParams, storeId]);
 
   const [checkedOptions, setCheckedOptions] =
     useState<readonly string[]>(selectedOptions);
@@ -65,19 +66,34 @@ export function MultiSelectFilter({
       const newSearchParams = new URLSearchParams(searchParams);
 
       if (selected.length === 0) {
-        newSearchParams.delete(`${id}.options`);
+        newSearchParams.delete(`${storeId}.options`);
       } else {
-        newSearchParams.set(`${id}.options`, btoa(JSON.stringify(selected)));
+        newSearchParams.set(`${storeId}.options`, btoa(JSON.stringify(selected)));
       }
 
-      setSearchParams(newSearchParams);
+      setSearchParams(newSearchParams, {
+        preventScrollReset: true,
+        replace: true,
+      });
     },
-    [searchParams, setSearchParams, id]
+    [searchParams, setSearchParams, storeId]
   );
+
+  useEffect(() => {
+    // Initialize checked options based on the selected options from search params
+    setCheckedOptions(selectedOptions);
+  }, [searchParams]);
+
+  const id = useId();
 
   const fuse = useMemo(() => {
     return new Fuse(options, {
       keys: ['label'],
+      threshold: 0.2,
+      includeScore: true,
+      ignoreLocation: true,
+      useExtendedSearch: true,
+      minMatchCharLength: 2,
     });
   }, [options]);
 
@@ -102,7 +118,6 @@ export function MultiSelectFilter({
         'bg-foreground/2 border border-input rounded-sm p-5 flex flex-col gap-5',
         className
       )}
-      id={id}
       onSubmit={(e) => {
         e.preventDefault();
         setSelectedOptions(checkedOptions);
@@ -142,7 +157,7 @@ export function MultiSelectFilter({
             />
           ))
         ) : (
-          <p className="text-sm">No options available</p>
+          <p className="text-sm">Geen resultaten</p>
         )}
       </div>
 
