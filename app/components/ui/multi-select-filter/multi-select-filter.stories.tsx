@@ -17,7 +17,21 @@ const sampleOptions: {
   { value: "apple", label: "Apple" },
   { value: "banana", label: "Banana" },
   { value: "cherry", label: "Cherry" },
-  
+  { value: "date", label: "Date" },
+  { value: "elderberry", label: "Elderberry" },
+  { value: "fig", label: "Fig" },
+  { value: "grape", label: "Grape" },
+  { value: "honeydew", label: "Honeydew" },
+  { value: "kiwi", label: "Kiwi" },
+  { value: "lemon", label: "Lemon" },
+  { value: "mango", label: "Mango" },
+  { value: "nectarine", label: "Nectarine" },
+  { value: "orange", label: "Orange" },
+  { value: "papaya", label: "Papaya" },
+  { value: "quince", label: "Quince" },
+  { value: "raspberry", label: "Raspberry" },
+  { value: "strawberry", label: "Strawberry" },
+  { value: "tangerine", label: "Tangerine" },
 ];
 
 export const Default: StoryObj<typeof MultiSelectFilter> = {
@@ -27,6 +41,7 @@ export const Default: StoryObj<typeof MultiSelectFilter> = {
     options: sampleOptions,
     applyButtonLabel: "Apply",
     className: "max-w-[300px]",
+    id: "fruits",
     onSubmit: (e) => {
       e.preventDefault();
     }
@@ -58,6 +73,7 @@ export const WithApplyHandler: StoryObj<typeof MultiSelectFilter> = {
     options: sampleOptions,
     applyButtonLabel: "Apply",
     className: "max-w-[300px]",
+    id: "fruits",
     onSubmit: (e) => {
       e.preventDefault();
     }
@@ -71,6 +87,7 @@ export const NoOptions: StoryObj<typeof MultiSelectFilter> = {
     options: [],
     applyButtonLabel: "Apply",
     className: "max-w-[300px]",
+    id: "fruits",
     onSubmit: (e) => {
       e.preventDefault();
     }
