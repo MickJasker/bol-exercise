@@ -85,10 +85,10 @@ export function MultiSelectFilter({
     if (!searchValue)
       return [
         ...options
-          .toSorted((a, b) => a.label.localeCompare(b.label))
+          .toSorted((a, b) => a.label.localeCompare(b.label, 'nl-NL'))
           .filter(({ value }) => selectedOptions.includes(value)),
         ...options
-          .toSorted((a, b) => a.label.localeCompare(b.label))
+          .toSorted((a, b) => a.label.localeCompare(b.label, 'nl-NL'))
           .filter(({ value }) => !selectedOptions.includes(value)),
       ];
 
