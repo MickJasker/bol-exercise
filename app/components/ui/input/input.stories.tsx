@@ -23,7 +23,7 @@ export const Default: Story = {
     expect(input).toHaveAttribute('placeholder', 'Type something...');
     await userEvent.type(input, 'Hello world');
     expect(input).toHaveValue('Hello world');
-  }
+  },
 };
 
 export const WithValue: Story = {
@@ -37,7 +37,7 @@ export const WithValue: Story = {
     expect(input).toHaveValue('');
     await userEvent.type(input, 'Hello world');
     expect(input).toHaveValue('Hello world');
-  }
+  },
 };
 
 export const Disabled: Story = {
@@ -48,7 +48,7 @@ export const Disabled: Story = {
   play: async ({ canvas }) => {
     const input = canvas.getByRole('textbox');
     expect(input).toBeDisabled();
-  }
+  },
 };
 
 export const Invalid: Story = {
@@ -59,13 +59,13 @@ export const Invalid: Story = {
   play: async ({ canvas }) => {
     const input = canvas.getByRole('textbox');
     expect(input).toHaveAttribute('aria-invalid', 'true');
-  }
+  },
 };
 
 export const Search: Story = {
   args: {
     placeholder: 'Search...',
-    "aria-label": 'Search',
+    'aria-label': 'Search',
     name: 'search',
     icon: <SearchIcon />,
   },
@@ -73,5 +73,5 @@ export const Search: Story = {
     const input = canvas.getByRole('textbox');
     await userEvent.type(input, 'Hello world');
     expect(input).toHaveValue('Hello world');
-  }
-}
+  },
+};

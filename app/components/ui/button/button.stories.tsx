@@ -6,7 +6,7 @@ const meta = {
   title: 'UI/Button',
   component: Button,
   tags: ['autodocs'],
-} satisfies Meta<typeof Button>
+} satisfies Meta<typeof Button>;
 
 export default meta;
 
@@ -20,7 +20,7 @@ export const Primary: Story = {
     const button = canvas.getByRole('button', { name: 'Button' });
 
     await userEvent.click(button);
-  }
+  },
 };
 
 export const Disabled: Story = {
@@ -31,5 +31,5 @@ export const Disabled: Story = {
   play: async ({ canvas }) => {
     const button = canvas.getByRole('button', { name: 'Button' });
     expect(button).toBeDisabled();
-  }
+  },
 };

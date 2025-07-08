@@ -23,7 +23,7 @@ export default function Home() {
     <div className="max-w-4xl mx-auto flex flex-col gap-20 px-8 py-20">
       <h1 className="text-5xl font-bold">Bol MultiSelect Exercise</h1>
 
-      <main className='contents'>
+      <main className="contents">
         <section className="flex flex-col gap-8">
           <h2 className="text-4xl font-bold">Single filter</h2>
           <p className="text-pretty text-foreground/70">
@@ -73,7 +73,11 @@ export default function Home() {
 
       <footer className="text-center text-sm text-foreground/70">
         Made by{' '}
-        <a href="https://www.linkedin.com/in/mick-jasker-3360bb13b/" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://www.linkedin.com/in/mick-jasker-3360bb13b/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Mick Jasker
         </a>{' '}
         -{' '}

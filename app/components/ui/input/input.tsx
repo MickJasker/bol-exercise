@@ -11,7 +11,7 @@ function Input({
   icon?: React.ReactNode;
 }) {
   return (
-    <div className='relative'>
+    <div className="relative">
       <input
         type={type}
         data-slot="input"
