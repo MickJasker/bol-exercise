@@ -48,12 +48,7 @@ export function MultiSelectFilter({
   const [searchParams, setSearchParams] = useSearchParams();
 
   const selectedOptions = useMemo(() => {
-    try {
-      const optionsString = searchParams.get(`${storeId}.options`);
-      return optionsString ? (JSON.parse(atob(optionsString)) as string[]) : [];
-    } catch {
-      return [];
-    }
+    return searchParams.get(`${storeId}.options`)?.split(',') ?? [];
   }, [searchParams, storeId]);
 
   const [checkedOptions, setCheckedOptions] =
@@ -68,7 +63,7 @@ export function MultiSelectFilter({
       } else {
         newSearchParams.set(
           `${storeId}.options`,
-          btoa(JSON.stringify(selected))
+          selected.join(',')
         );
       }
       setSearchParams(newSearchParams, {

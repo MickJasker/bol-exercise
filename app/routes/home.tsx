@@ -28,11 +28,11 @@ export default function Home() {
           <h2 className="text-4xl font-bold">Single filter</h2>
           <p className="text-pretty text-foreground/70">
             This filter uses the URL search params to store the selected
-            options. The selected options are stored as a base64 encoded JSON
-            string in the URL. User can refresh the page and the selected
-            options will be preserved. Selected filters can also be shared via
-            the URL. Parts of your app that want to use the selected filter can
-            use the searchParams to retrieve the selected options.
+            options. The selected options are stored in the URL. User can
+            refresh the page and the selected options will be preserved.
+            Selected filters can also be shared via the URL. Parts of your app
+            that want to use the selected filter can use the searchParams to
+            retrieve the selected options.
           </p>
           <MultiSelectFilter
             className="w-[300px]"
