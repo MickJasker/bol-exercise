@@ -1,10 +1,13 @@
 import {
+  startTransition,
   useCallback,
-  useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
   useState,
+  type Dispatch,
   type HTMLAttributes,
+  type SetStateAction,
 } from 'react';
 import { cn } from '~/lib/utils';
 import { Checkbox } from '../checkbox/checkbox';
@@ -61,10 +64,7 @@ export function MultiSelectFilter({
       if (selected.length === 0) {
         newSearchParams.delete(`${storeId}.options`);
       } else {
-        newSearchParams.set(
-          `${storeId}.options`,
-          selected.join(',')
-        );
+        newSearchParams.set(`${storeId}.options`, selected.join(','));
       }
       setSearchParams(newSearchParams, {
         preventScrollReset: true,
@@ -74,39 +74,7 @@ export function MultiSelectFilter({
     [searchParams, setSearchParams, storeId]
   );
 
-  useEffect(() => {
-    setCheckedOptions(selectedOptions);
-  }, [searchParams]);
-
   const id = useId();
-
-  const fuse = useMemo(
-    () =>
-      new Fuse(options, {
-        keys: ['label'],
-        threshold: 0.2,
-        includeScore: true,
-        ignoreLocation: true,
-        useExtendedSearch: true,
-        minMatchCharLength: 2,
-      }),
-    [options]
-  );
-
-  const filteredOptions = useMemo(() => {
-    if (!searchValue) {
-      const sorted = options.toSorted((a, b) =>
-        a.label.localeCompare(b.label, 'nl-NL')
-      );
-
-      return [
-        ...sorted.filter(({ value }) => selectedOptions.includes(value)),
-        ...sorted.filter(({ value }) => !selectedOptions.includes(value)),
-      ];
-    }
-
-    return fuse.search(searchValue).map((result) => result.item);
-  }, [searchValue, fuse, options, selectedOptions]);
 
   return (
     <form
@@ -131,32 +99,95 @@ export function MultiSelectFilter({
         icon={<SearchIcon />}
         name="search"
         placeholder="Search..."
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
+        onChange={(e) => startTransition(() => setSearchValue(e.target.value))}
       />
 
-      <div className="flex flex-col gap-4 h-[200px] relative overflow-y-auto">
-        {filteredOptions.length > 0 ? (
-          filteredOptions.map(({ value, label }) => (
-            <Checkbox
-              key={value}
-              value={value}
-              name="options"
-              checked={checkedOptions.includes(value)}
-              onCheckedChange={(checked) => {
-                setCheckedOptions((prev) =>
-                  checked ? [...prev, value] : prev.filter((v) => v !== value)
-                );
-              }}
-              label={{ children: label }}
-            />
-          ))
-        ) : (
-          <p className="text-sm">Geen resultaten</p>
-        )}
-      </div>
+      <FilteredList
+        options={options}
+        checkedOptions={checkedOptions}
+        setCheckedOptions={setCheckedOptions}
+        onChange={setSelectedOptions}
+        searchValue={searchValue}
+        storeId={storeId}
+      />
 
       <Button type="submit">{applyButtonLabel}</Button>
     </form>
+  );
+}
+
+function FilteredList({
+  options,
+  checkedOptions,
+  setCheckedOptions,
+  searchValue = '',
+  storeId,
+}: {
+  options: readonly { value: string; label: string }[];
+  checkedOptions: readonly string[];
+  setCheckedOptions: Dispatch<SetStateAction<readonly string[]>>;
+  onChange?: (selected: readonly string[]) => void;
+  searchValue?: string;
+  storeId: string;
+}) {
+  const [searchParams] = useSearchParams();
+
+  useLayoutEffect(() => {
+    setCheckedOptions(selectedOptions);
+  }, [searchParams]);
+
+  const fuse = useMemo(
+    () =>
+      new Fuse(options, {
+        keys: ['label'],
+        threshold: 0.2,
+        includeScore: true,
+        ignoreLocation: true,
+        useExtendedSearch: true,
+        minMatchCharLength: 2,
+      }),
+    [options]
+  );
+
+  const selectedOptions = useMemo(() => {
+    return searchParams.get(`${storeId}.options`)?.split(',') ?? [];
+  }, [searchParams, storeId]);
+
+  const filteredOptions = useMemo(() => {
+    if (!searchValue) {
+      const sorted = options.toSorted((a, b) =>
+        a.label.localeCompare(b.label, 'nl-NL')
+      );
+
+      return [
+        ...sorted.filter(({ value }) => selectedOptions.includes(value)),
+        ...sorted.filter(({ value }) => !selectedOptions.includes(value)),
+      ];
+    }
+
+    return fuse.search(searchValue).map((result) => result.item);
+  }, [searchValue, fuse, options, selectedOptions]);
+
+  return (
+    <div className="flex flex-col gap-4 h-[200px] relative overflow-y-auto">
+      {filteredOptions.length > 0 ? (
+        filteredOptions.map(({ value, label }) => (
+          <Checkbox
+            key={value}
+            value={value}
+            name="options"
+            checked={checkedOptions.includes(value)}
+            onCheckedChange={(checked) => {
+              setCheckedOptions((prev) =>
+                checked ? [...prev, value] : prev.filter((v) => v !== value)
+              );
+            }}
+            label={{ children: label }}
+          />
+        ))
+      ) : (
+        <p className="text-sm">Geen resultaten</p>
+      )}
+    </div>
   );
 }
