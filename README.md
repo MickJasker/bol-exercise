@@ -1,87 +1,51 @@
-# Welcome to React Router!
+# Bol Multi select filter exercise
+This project is a demonstration of a multi-select filter component built with React, TypeScript, and various modern web technologies. It showcases the use of React Router for routing, Tanstack Query for data fetching, and GraphQL for querying data.
 
-A modern, production-ready template for building full-stack React applications using React Router.
+## Tech Stack
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+### React Router
+This project uses React Router v7 in framework mode for efficient routing and navigation. Integrated with Vite, it supports both server-side rendering (SSR) and seamless client-side navigation.
 
-## Features
+### Tanstack Query
+Tanstack Query (formerly React Query) is used for data fetching and state management, providing a powerful and flexible way to handle server state in React applications. It simplifies data fetching, caching, synchronization, and background updates, making it easier to manage remote data in React applications.
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+### GraphQL
+GraphQL is used for querying and mutating data, providing a flexible and efficient way to interact with APIs. It allows clients to request only the data they need, reducing over-fetching and under-fetching issues. 
 
-## Getting Started
+On the client side, GraphQL is integrated with Tanstack Query for seamless data fetching and caching.
 
-### Installation
+On the server side, GraphQL is implemented using GraphQL Yoga, a fully-featured GraphQL server that supports subscriptions, file uploads, and more. It is designed to be easy to use and flexible, making it a great choice for building GraphQL APIs. In this case, a simple demonstration of a GraphQL server is provided.
 
-Install the dependencies:
+### Storybook
+Storybook is used for developing and testing UI components in isolation. It provides a powerful environment for building and documenting components, making it easier to create reusable and maintainable UI elements.
 
-```bash
-npm install
-```
+All components are built with Storybook in mind and using interaction tests to ensure they work as expected. This allows for a more efficient development process and helps catch issues early in the development cycle.
 
-### Development
+## Running the project
 
-Start the development server with HMR:
+### Requirements
 
-```bash
-npm run dev
-```
+- Node LTS (v22)
+- pnpm
 
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
+### Install dependencies
 
 ```bash
-npm run build
+pnpm i
 ```
 
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
+### Running the app
 
 ```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
+pnpm dev
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+Visit [http://localhost:5173](http://localhost:5173)
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+### Running storybook
 
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
+```bash
+pnpm storybook
 ```
 
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+Visit [http://localhost:6006](http://localhost:6006)
