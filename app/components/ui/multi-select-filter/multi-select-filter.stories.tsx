@@ -50,7 +50,7 @@ export const Default: StoryObj<typeof MultiSelectFilter> = {
   play: async ({ canvas, userEvent }) => {
     const input = canvas.getByRole('textbox');
     expect(input).toHaveValue('');
-    expect(input).toHaveAttribute('placeholder', 'Search...');
+    expect(input).toHaveAttribute('placeholder', 'Zoek op...');
 
     await userEvent.type(input, 'Fig');
 
