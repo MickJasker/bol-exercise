@@ -2,7 +2,7 @@ import { gql } from 'graphql-request';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import type { Route } from './+types/home';
 import { graphQLClient } from '~/api/graphql';
-import { queryClient } from '~/api/queryClient';
+import { queryClient } from '~/api/query-client';
 import { MultiSelectFilter } from '~/components/ui/multi-select-filter/multi-select-filter';
 
 // eslint-disable-next-line no-empty-pattern

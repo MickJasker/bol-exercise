@@ -7,7 +7,7 @@ import {
   ScrollRestoration,
 } from 'react-router';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { queryClient } from './api/queryClient';
+import { queryClient } from './api/query-client';
 
 import type { Route } from './+types/root';
 import './app.css';
