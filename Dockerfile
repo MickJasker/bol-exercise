@@ -24,4 +24,5 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 COPY --from=production-dependencies-env /app/node_modules ./node_modules
 COPY --from=build-env /app/build ./build
+COPY server ./server
 CMD ["pnpm", "run", "start"]
